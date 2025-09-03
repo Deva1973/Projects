@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Guardians of Wealth: An Animated Presentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+            color: #F9FAFB;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        #presentation-container {
+            width: 100vw;
+            height: 100vh;
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+        }
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 4rem;
+            box-sizing: border-box;
+            scroll-snap-align: start;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .slide.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+        }
+        .animated-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out 0.3s, transform 0.5s ease-out 0.3s;
+        }
+        .slide.is-visible .animated-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide.is-visible .delay-1 { transition-delay: 0.5s; }
+        .slide.is-visible .delay-2 { transition-delay: 0.7s; }
+        .slide.is-visible .delay-3 { transition-delay: 0.9s; }
+        .slide.is-visible .delay-4 { transition-delay: 1.1s; }
+        .slide.is-visible .delay-5 { transition-delay: 1.3s; }
+        
+        @keyframes floatAnimation {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulseAnimation {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(96, 165, 250, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(96, 165, 250, 0.8); }
+        }
+
+        .hero-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #374151;
+            border: 3px solid #60A5FA;
+            box-shadow: 0 0 15px rgba(96, 165, 250, 0.5);
+            transition: transform 0.3s ease;
+            animation: pulseAnimation 3s infinite ease-in-out;
+        }
+        .hero-avatar:hover {
+            transform: scale(1.1);
+            animation-play-state: paused;
+        }
+
+        .slide-character {
+            opacity: 0;
+            transform: scale(0.9) translateY(10px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            background-color: rgba(55, 65, 81, 0.5);
+            border-radius: 1rem;
+            padding: 0.5rem;
+            border: 2px solid #4B5563;
+        }
+        .slide.is-visible .slide-character {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            animation: floatAnimation 4s ease-in-out infinite;
+        }
+        
+        .dialogue-box {
+            background-color: #374151;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: left;
+            position: relative;
+            border: 2px solid #4B5563;
+        }
+        .dialogue-box .character-name {
+            font-weight: 900;
+            color: #60A5FA;
+            margin-bottom: 0.5rem;
+        }
+
+        #nav-controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 100;
+        }
+        .nav-button {
+            background-color: rgba(31, 41, 55, 0.8);
+            border: 1px solid #4B5563;
+            color: #F9FAFB;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .nav-button:hover {
+            background-color: #4B5563;
+            transform: scale(1.1);
+        }
+        .nav-button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .quiz-option {
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, border-color 0.3s;
+        }
+        .quiz-option:hover {
+            background-color: #3B82F6 !important;
+            transform: scale(1.02);
+        }
+        .quiz-option.selected {
+            border-color: #FBBF24;
+        }
+        .quiz-option.correct {
+            border-color: #34D399;
+            background-color: #10B98130 !important;
+        }
+        .quiz-option.incorrect {
+            border-color: #F87171;
+            opacity: 0.7;
+        }
+
+        #slide-counter {
+            position: fixed;
+            bottom: 2.5rem;
+            left: 2rem;
+            font-size: 1.1rem;
+            color: #9CA3AF;
+            background-color: rgba(31, 41, 55, 0.8);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="presentation-container">
+        <!-- Slide 1: Title -->
+        <section class="slide" data-slide-name="Title">
+            <div class="slide-content text-center">
+                <h1 class="text-6xl md:text-8xl font-black tracking-tight text-blue-400 animated-item">The Guardians of Wealth</h1>
+                <p class="text-2xl md:text-3xl mt-4 text-gray-300 animated-item delay-1">A Strategic Analysis of Sovereign Wealth Funds</p>
+                <div id="hero-group" class="flex justify-center items-center gap-4 mt-12 animated-item delay-2">
+                    <div class="hero-avatar" title="The Strategist"><img src="https://robohash.org/CaptainCapital?set=set4&size=80x80" alt="The Strategist" class="rounded-full" onerror="this.style.display='none'"></div>
+                    <div class="hero-avatar" title="The Stabilizer"><img src="https://robohash.org/TheAegis?set=set2&size=80x80" alt="The Stabilizer" class="rounded-full" onerror="this.style.display='none'"></div>
+                    <div class="hero-avatar" title="The Legacy Guardian"><img src="https://robohash.org/FuturaGuardian?set=set3&size=80x80" alt="The Legacy Guardian" class="rounded-full" onerror="this.style.display='none'"></div>
+                    <div class="hero-avatar" title="The Portfolio Architect"><img src="https://robohash.org/DoctorDiversify?set=set1&size=80x80" alt="The Portfolio Architect" class="rounded-full" onerror="this.style.display='none'"></div>
+                    <div class="hero-avatar" title="The Ethical Compass"><img src="https://robohash.org/TheSentinel?set=set5&size=80x80" alt="The Ethical Compass" class="rounded-full" onerror="this.style.display='none'"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 2: Mission -->
+        <section class="slide" data-slide-name="Mission">
+            <div class="slide-content text-center">
+                <h2 class="text-5xl font-bold text-blue-400 mb-12 animated-item">Presentation Objectives</h2>
+                <ul class="text-2xl text-left inline-block space-y-4">
+                    <li class="animated-item delay-1">Define Sovereign Wealth Funds (SWFs) and their macroeconomic purpose.</li>
+                    <li class="animated-item delay-2">Analyze the primary capitalization sources for SWFs.</li>
+                    <li class="animated-item delay-3">Deconstruct the core mandates and strategic roles within SWF management.</li>
+                    <li class="animated-item delay-4">Examine a leading SWF as a case study in long-term strategy and governance.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Slide 3: Source of Power -->
+        <section class="slide" data-slide-name="Capitalization Sources">
+            <div class="slide-content text-center">
+                <h2 class="text-5xl font-bold text-blue-400 mb-6 animated-item">Capitalization Sources</h2>
+                <p class="text-xl text-gray-300 max-w-4xl mx-auto mb-10 animated-item delay-1">SWFs are capitalized through national financial surpluses. These typically arise from two primary channels, requiring careful management to avoid economic distortions.</p>
+                <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+                    <div class="text-center animated-item delay-2">
+                        <p class="text-2xl font-bold mb-2">Commodity Revenues</p>
+                        <p class="text-gray-400">e.g., Oil, Gas, Minerals</p>
+                    </div>
+                    <div class="text-3xl text-blue-400 animated-item delay-3">&rarr;</div>
+                    <div class="p-6 bg-blue-900/50 rounded-lg border-2 border-blue-500 shadow-lg shadow-blue-500/30 animated-item delay-4">
+                        <h3 class="text-3xl font-bold">Balance of Payments Surplus</h3>
+                    </div>
+                    <div class="text-3xl text-blue-400 animated-item delay-3">&larr;</div>
+                    <div class="text-center animated-item delay-2">
+                        <p class="text-2xl font-bold mb-2">Non-Commodity Surpluses</p>
+                        <p class="text-gray-400">e.g., Foreign Exchange Reserves</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Meet the League -->
+        <section class="slide" data-slide-name="Core Mandates">
+             <div class="slide-content text-center">
+                <h2 class="text-5xl font-bold text-blue-400 mb-12 animated-item">Core SWF Mandates</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="p-6 bg-gray-800 rounded-lg animated-item delay-1 text-center flex flex-col items-center gap-4"><img src="https://robohash.org/TheAegis?set=set2&size=100x100" alt="The Stabilizer" class="rounded-lg"><h3 class="text-2xl font-bold">The Stabilizer</h3><p>Executes a stabilization mandate, using funds to buffer the national budget from commodity price volatility and external economic shocks.</p></div>
+                    <div class="p-6 bg-gray-800 rounded-lg animated-item delay-2 text-center flex flex-col items-center gap-4"><img src="https://robohash.org/FuturaGuardian?set=set3&size=100x100" alt="The Legacy Guardian" class="rounded-lg"><h3 class="text-2xl font-bold">The Legacy Guardian</h3><p>Fulfills a savings mandate, ensuring intergenerational equity by converting finite resources into a perpetual source of national wealth.</p></div>
+                    <div class="p-6 bg-gray-800 rounded-lg animated-item delay-3 text-center flex flex-col items-center gap-4"><img src="https://robohash.org/DoctorDiversify?set=set1&size=100x100" alt="The Portfolio Architect" class="rounded-lg"><h3 class="text-2xl font-bold">The Portfolio Architect</h3><p>Drives the investment mandate, constructing a globally diversified portfolio designed to maximize long-term, risk-adjusted returns.</p></div>
+                    <div class="p-6 bg-gray-800 rounded-lg animated-item delay-4 text-center flex flex-col items-center gap-4"><img src="https://robohash.org/TheSentinel?set=set5&size=100x100" alt="The Ethical Compass" class="rounded-lg"><h3 class="text-2xl font-bold">The Ethical Compass</h3><p>Upholds the governance mandate, ensuring all investment activities adhere to strict ethical, legal, and transparency standards.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: The Process Begins -->
+        <section class="slide" data-slide-name="Process Begins">
+             <div class="slide-content w-full">
+                <h2 class="text-5xl font-bold text-blue-400 mb-10 animated-item">Strategic Framework: A Dialogue</h2>
+                <div class="flex items-start justify-center gap-8">
+                    <div class="flex flex-col items-center animated-item delay-1">
+                        <img src="https://robohash.org/CaptainCapital?set=set4&size=150x150" alt="The Strategist" class="slide-character mb-4">
+                        <h3 class="font-bold text-xl">The Strategist</h3>
+                    </div>
+                    <div class="dialogue-box max-w-2xl mt-8 animated-item delay-2">
+                        <p class="character-name">The Strategist</p>
+                        <p class="text-xl">Let's begin. When the nation registers a significant surplus, my function is to manage these capital inflows. A primary concern is mitigating the risk of 'Dutch disease', where a resource boom could harm other sectors of the economy. Legacy Guardian, explain the long-term imperative.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 6: The Conversation Continues -->
+        <section class="slide" data-slide-name="Conversation Continues">
+             <div class="slide-content w-full">
+                <div class="flex items-start justify-center gap-8">
+                    <div class="dialogue-box max-w-2xl mt-8 animated-item delay-1">
+                        <p class="character-name">The Legacy Guardian</p>
+                        <p class="text-xl">The core principle is intergenerational equity. We are converting a finite, non-renewable asset into a perpetual financial asset. The goal is to preserve the real value of this capital indefinitely, so that future citizens benefit as much as current ones. Portfolio Architect, detail your allocation strategy.</p>
+                    </div>
+                     <div class="flex flex-col items-center animated-item delay-2">
+                        <img src="https://robohash.org/FuturaGuardian?set=set3&size=150x150" alt="The Legacy Guardian" class="slide-character mb-4">
+                        <h3 class="font-bold text-xl">The Legacy Guardian</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Doctor Diversify Explains -->
+        <section class="slide" data-slide-name="Portfolio Architect">
+             <div class="slide-content w-full">
+                 <div class="flex items-start justify-center gap-8">
+                    <div class="flex flex-col items-center animated-item delay-1">
+                        <img src="https://robohash.org/DoctorDiversify?set=set1&size=150x150" alt="The Portfolio Architect" class="slide-character mb-4">
+                        <h3 class="font-bold text-xl">The Portfolio Architect</h3>
+                    </div>
+                    <div class="dialogue-box max-w-2xl mt-8 animated-item delay-2">
+                        <p class="character-name">The Portfolio Architect</p>
+                        <p class="text-xl">My mandate is to achieve the highest possible risk-adjusted returns. We construct a strategic asset allocation across global equities, fixed income, real estate, and infrastructure. This diversification is crucial to hedge against the volatility of the single commodity that funds us. It delinks the nation's wealth from a single price point.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: The Aegis Steps In -->
+        <section class="slide" data-slide-name="Stabilizer Steps In">
+             <div class="slide-content w-full">
+                <div class="flex items-start justify-center gap-8">
+                    <div class="dialogue-box max-w-2xl mt-8 animated-item delay-1">
+                        <p class="character-name">The Stabilizer</p>
+                        <p class="text-xl">Precisely. And during a downturn, my stabilization mandate is activated. We implement counter-cyclical fiscal policy, drawing from a pre-allocated portion of the fund to cover budgetary shortfalls. This prevents drastic cuts to public spending and maintains economic stability during volatile periods.</p>
+                    </div>
+                    <div class="flex flex-col items-center animated-item delay-2">
+                        <img src="https://robohash.org/TheAegis?set=set2&size=150x150" alt="The Stabilizer" class="slide-character mb-4">
+                        <h3 class="font-bold text-xl">The Stabilizer</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 9: Case Study - Norway -->
+        <section class="slide" data-slide-name="Case Study: Norway">
+             <div class="slide-content flex flex-col md:flex-row-reverse items-center justify-center gap-12">
+                <img src="https://robohash.org/FuturaGuardian?set=set3&size=200x200" alt="The Legacy Guardian" class="slide-character animated-item delay-1">
+                <div class="text-center md:text-right">
+                    <h2 class="text-5xl font-bold text-blue-400 mb-6 animated-item">Case Study: Norway's GPFG</h2>
+                     <p class="text-xl max-w-2xl italic text-gray-300 animated-item delay-2">The Legacy Guardian speaks: "Consider the Government Pension Fund Global of Norway. Capitalized by surplus petroleum revenue, it exemplifies the principle of converting resource wealth into diversified financial wealth. The fund's explicit goal is to support the long-term management of the Norwegian economy."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Case Study - Ethics -->
+        <section class="slide" data-slide-name="Case Study: Ethics">
+             <div class="slide-content flex flex-col md:flex-row items-center justify-center gap-12">
+                 <img src="https://robohash.org/TheSentinel?set=set5&size=200x200" alt="The Ethical Compass" class="slide-character animated-item delay-1">
+                <div class="text-center md:text-left">
+                    <h2 class="text-5xl font-bold text-blue-400 mb-6 animated-item">Governance and Ethical Screening</h2>
+                    <p class="text-xl max-w-2xl mb-8 animated-item delay-2">The GPFG operates under a robust ethical framework. It excludes investments in companies involved in specific sectors like tobacco production or those violating human rights norms.</p>
+                    <p class="text-xl max-w-2xl italic text-gray-300 animated-item delay-3">The Ethical Compass adds: "My role is embodied by Norway's Council on Ethics. It provides independent recommendations for exclusion, ensuring the fund's investments align with the nation's values. This demonstrates that immense financial power can, and should, be wielded with principled governance."</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 11: Gamified Section -->
+        <section class="slide" data-slide-name="Quiz">
+            <div class="slide-content text-center">
+                <h2 class="text-5xl font-bold text-blue-400 mb-4 animated-item">Policy Decision Point</h2>
+                <p class="text-xl mb-8 max-w-4xl mx-auto animated-item delay-1">Your nation's SWF is capitalized by lithium exports. A global battery technology breakthrough causes lithium prices to crash 50%. Simultaneously, an aging population is straining the pension system. What is your most prudent immediate action?</p>
+                <div id="quiz-options" class="grid grid-cols-1 md:grid-cols-3 gap-6 text-lg">
+                    <div data-choice="A" class="quiz-option p-6 bg-gray-800 rounded-lg border-2 border-transparent animated-item delay-2">
+                        <h3 class="font-bold">A) Aggressive Divestment & Re-Investment</h3>
+                        <p class="text-gray-400 text-sm mt-2">Immediately sell underperforming foreign equities and invest heavily in emerging domestic green-tech sectors to corner the next market.</p>
+                    </div>
+                     <div data-choice="B" class="quiz-option p-6 bg-gray-800 rounded-lg border-2 border-transparent animated-item delay-3" data-correct="true">
+                        <h3 class="font-bold">B) Activate Stabilization & Communicate Strategy</h3>
+                        <p class="text-gray-400 text-sm mt-2">Use the stabilization portion of the fund to cover the immediate budget shortfall while publicly reaffirming the fund's long-term strategy to supplement future pension liabilities.</p>
+                    </div>
+                     <div data-choice="C" class="quiz-option p-6 bg-gray-800 rounded-lg border-2 border-transparent animated-item delay-4">
+                        <h3 class="font-bold">C) Prioritize Pension Payouts</h3>
+                        <p class="text-gray-400 text-sm mt-2">Liquidate a significant portion of the fund's safest assets (e.g., foreign government bonds) to fully fund the pension system for the next five years, ensuring social stability.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: Summary -->
+        <section class="slide" data-slide-name="Summary">
+            <div class="slide-content text-center">
+                <h2 class="text-5xl font-bold text-blue-400 mb-12 animated-item">Key Takeaways</h2>
+                <ul class="text-2xl text-left inline-block space-y-4">
+                    <li class="animated-item delay-1">SWFs are sophisticated macroeconomic tools for managing national wealth and mitigating volatility.</li>
+                    <li class="animated-item delay-2">Their core mandates—stabilization, savings, investment, and governance—dictate their strategic actions.</li>
+                    <li class="animated-item delay-3">Effective SWFs balance immediate fiscal needs with the imperative of long-term, intergenerational wealth preservation.</li>
+                    <li class="animated-item delay-4">Robust governance and ethical frameworks are critical for maintaining public trust and long-term legitimacy.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Slide 13: Q&A -->
+        <section class="slide" data-slide-name="Q&A">
+            <div class="slide-content text-center">
+                <h2 class="text-8xl font-black text-blue-400 animated-item">Questions?</h2>
+                <div class="flex justify-center items-center gap-4 mt-12 animated-item delay-1">
+                    <div class="hero-avatar" title="The Strategist"><img src="https://robohash.org/CaptainCapital?set=set4&size=80x80" alt="The Strategist" class="rounded-full" onerror="this.style.display='none'"></div>
+                    <div class="hero-avatar" title="The Stabilizer"><img src="https://robohash.org/TheAegis?set=set2&size=80x80" alt="The Stabilizer" class="rounded-full" onerror="this.style.display='none'"></div>
+                    <div class="hero-avatar" title="The Legacy Guardian"><img src="https://robohash.org/FuturaGuardian?set=set3&size=80x80" alt="The Legacy Guardian" class="rounded-full" onerror="this.style.display='none'"></div>
+                    <div class="hero-avatar" title="The Portfolio Architect"><img src="https://robohash.org/DoctorDiversify?set=set1&size=80x80" alt="The Portfolio Architect" class="rounded-full" onerror="this.style.display='none'"></div>
+                    <div class="hero-avatar" title="The Ethical Compass"><img src="https://robohash.org/TheSentinel?set=set5&size=80x80" alt="The Ethical Compass" class="rounded-full" onerror="this.style.display='none'"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="nav-controls">
+        <button id="prevBtn" class="nav-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg>
+        </button>
+        <button id="nextBtn" class="nav-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+        </button>
+    </div>
+    <div id="slide-counter">1 / 13</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('presentation-container');
+            const slides = Array.from(document.querySelectorAll('.slide'));
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slide-counter');
+
+            let currentSlideIndex = 0;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            slides.forEach(slide => observer.observe(slide));
+
+            function updateNav() {
+                currentSlideIndex = Math.round(container.scrollTop / window.innerHeight);
+                slideCounter.textContent = `${currentSlideIndex + 1} / ${slides.length}`;
+                prevBtn.classList.toggle('disabled', currentSlideIndex === 0);
+                nextBtn.classList.toggle('disabled', currentSlideIndex === slides.length - 1);
+            }
+            
+            function goToSlide(index) {
+                container.scrollTo({
+                    top: index * window.innerHeight,
+                    behavior: 'smooth'
+                });
+            }
+
+            prevBtn.addEventListener('click', () => {
+                if (currentSlideIndex > 0) {
+                    goToSlide(currentSlideIndex - 1);
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentSlideIndex < slides.length - 1) {
+                    goToSlide(currentSlideIndex + 1);
+                }
+            });
+
+            container.addEventListener('scroll', updateNav);
+
+            const quizOptions = document.querySelectorAll('.quiz-option');
+            let quizAnswered = false;
+
+            quizOptions.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    if (quizAnswered) return;
+                    quizAnswered = true;
+
+                    const selectedOption = e.currentTarget;
+                    selectedOption.classList.add('selected');
+
+                    setTimeout(() => {
+                        quizOptions.forEach(opt => {
+                            if (opt.dataset.correct === 'true') {
+                                opt.classList.add('correct');
+                            } else {
+                                opt.classList.add('incorrect');
+                            }
+                        });
+                    }, 1000);
+                });
+            });
+
+            updateNav();
+            goToSlide(0);
+        });
+    </script>
+</body>
+</html>
+
